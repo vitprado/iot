@@ -1,0 +1,99 @@
+-- DROP DATABASE iot;
+
+CREATE DATABASE iot
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'en_US.UTF-8'
+       LC_CTYPE = 'en_US.UTF-8'
+       CONNECTION LIMIT = -1;
+       
+DROP TABLE IF EXISTS medicao;
+DROP SEQUENCE medicao_ID_medicao_seq;
+CREATE SEQUENCE medicao_ID_medicao_seq;
+CREATE TABLE medicao
+(
+  id_medicao integer NOT NULL DEFAULT nextval('medicao_id_medicao_seq') PRIMARY KEY,
+  tipo character,
+  hora_captura timestamp default current_timestamp,
+  sensor0 decimal,
+  sensor1 decimal,
+  sensor2 decimal,
+  sensor3 decimal,
+  sensor4 decimal,
+  sensor5 decimal
+);
+
+COMMENT ON COLUMN "resultados"."tipo" IS '1- Beaglebone wifi, 2- Beaglebone cabo, 3- OpenWSN';
+
+"INSERT INTO medicao VALUES (DEFAULT, '{}', '{}', {}, {}, {});".format(tipo, timestamp, a, b, c)
+
+SELECT m.sensor0, m.sensor1, m.sensor2, m.sensor3, m.sensor4, m.sensor5 from medicao as m order by m.id_medicao DESC limit 1;
+
+
+
+-- BANCO DE DADOS LOCAL (iot.resultados)
+
+
+DROP TABLE IF EXISTS resultados;
+DROP SEQUENCE resultados_ID_resultado_seq;
+
+CREATE SEQUENCE resultados_ID_resultado_seq;
+CREATE TABLE resultados
+(
+  id_resultado integer NOT NULL DEFAULT nextval('resultados_ID_resultado_seq') PRIMARY KEY,
+  hora_captura timestamp default current_timestamp,
+  tempo decimal,
+  tipo character
+);
+
+COMMENT ON COLUMN "resultados"."tipo" IS '1- Beaglebone wifi, 2- Beaglebone cabo, 3- OpenWSN';
+
+-- Estatisticas
+select 
+    count(*) as medicoes, 
+	ceil(min(r.tempo)*1000) as min, 
+	ceil(max(r.tempo)*1000) as max, 
+	ceil(AVG(r.tempo)*1000) as media, 
+	round(var_pop(r.tempo)*1000,4) as variancia,
+	round(stddev_pop(r.tempo)*1000,4) as desvio_padrao,
+	r.tipo
+from resultados as r
+where r.tempo > 0
+group by
+	r.tipo
+;
+
+--
+-- Estatisticas 2
+select 
+    count(*) as medicoes, 
+    ceil(min(r.tempo)*1000) as min, 
+	ceil(max(r.tempo)*1000) as max, 
+	ceil(AVG(r.tempo)*1000) as media, 
+	round(var_pop(r.tempo)*1000,4) as variancia,
+	round(stddev_pop(r.tempo)*1000,4) as desvio_padrao,
+	EXTRACT(year from hora_captura) AS year,
+	EXTRACT(month from hora_captura) AS month,
+	EXTRACT(day from hora_captura) as day,
+	EXTRACT(minute from hora_captura) as minuto
+from resultados as r
+where r.tempo > 0
+group by year, month, day, minuto
+order by minuto
+;
+
+-- Ultimos 1000 resultados
+select * 
+from resultados as r 
+order by
+	r.id_resultado DESC
+limit 1000
+;
+
+-- Pacotes perdidos
+select * 
+from resultados as r 
+where
+	r.tempo = 0;
+
