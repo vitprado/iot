@@ -434,19 +434,19 @@ int main(int argc, char *argv[]) {
  	while(1){
 
 	 	// Leitura de VA_RMS
-	 	sleep(0.1);
+	 	sleep(0.3);
 	 	spiRead(SONOMA_ADDR_VA_RMS);
-	 	valor1 = CalculaS23(&rx[2]) / SONOMA_TRIMER_VA_RMS;
+	 	valor1 = CalculaSType(&rx[2],23) / SONOMA_TRIMER_VA_RMS;
 
 	 	// Leitura de IA_RMS
-	 	sleep(0.1);
+	 	sleep(0.3);
 	 	spiRead(SONOMA_ADDR_IA_RMS);
-	 	valor2 = CalculaS23(&rx[2]);// / SONOMA_TRIMER_IA_RMS;
+	 	valor2 = CalculaSType(&rx[2],23);// / SONOMA_TRIMER_IA_RMS;
 
 	 	// Leitura de WATT_A
-	 	sleep(0.1);
+	 	sleep(0.3);
 	 	spiRead(SONOMA_ADDR_WATT_A);
-	 	valor3 = CalculaS23(&rx[2]);// / SONOMA_TRIMER_WATT_A;
+	 	valor3 = CalculaSType(&rx[2],23);// / SONOMA_TRIMER_WATT_A;
 
 		// Check to see that the backend connection was successfully made
 	 	if (PQstatus(conn) != CONNECTION_OK)
@@ -467,7 +467,7 @@ int main(int argc, char *argv[]) {
 	 		exit_nicely(conn);
 	 	}
 
-	 	sleep(0.5);
+	 	sleep(1);
 	}
 	// Final da rotina de captura e persistencia de dados
 
