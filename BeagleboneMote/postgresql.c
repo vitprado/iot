@@ -23,6 +23,7 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include <math.h> 
 
 // Comunicação com o banco de dados
 #include "/usr/include/postgresql/libpq-fe.h"
@@ -78,6 +79,45 @@ uint8_t rx[] = {
 
 volatile uint32_t param[10];
 
+
+// Metodo analitico generico. 
+// Passar o parametro 'int stype' com o valor 23 para S.23, 21 para S.21...
+float CalculaSType(uint8_t *rx, int stype){
+
+	float retorno = 0;
+
+	int k;
+	int j;
+
+	for (int i = 1; i < 23; ++i)
+	{
+		if(i > 15){
+			k = 2;
+			j = 23 - i;
+		} else 
+		if (i > 7){
+			k = 1;
+			j = 15 - i;
+		} else {
+			k = 0;
+			j = 7 - i;
+		}
+
+		if(i< 24 - stype){
+			retorno += rx[k] & (int)pow(2,j) ? 1/pow(2, (22 - stype)) : 0;
+
+		} else {
+			retorno += rx[k] & (int)pow(2,j) ? 1/pow(2,i) : 0;
+		}
+
+	}
+
+	retorno = rx[0] & 128 ? (-1) * retorno : retorno; // Verifica o sinal
+
+	return retorno;
+}
+
+
 float CalculaS21(uint8_t *rx){
 
 	float retorno = 0;
@@ -112,6 +152,42 @@ float CalculaS21(uint8_t *rx){
 
 	return retorno;
 }
+
+float CalculaS22(uint8_t *rx){
+
+	float retorno = 0;
+
+	retorno += rx[0] & 64 ? 1 : 0; // bit da posição 22
+	retorno += rx[0] & 32 ? 0.5 : 0; // 1/2
+	retorno += rx[0] & 16 ? 0.25 : 0; // 1/4
+	retorno += rx[0] & 8  ? 0.125 : 0; // 1/8
+	retorno += rx[0] & 4  ? 0.0625 : 0; // 1/16
+	retorno += rx[0] & 2  ? 0.03125 : 0; // 1/32
+	retorno += rx[0] & 1  ? 0.015625 : 0; // 1/64
+
+	retorno += rx[1] & 128 ? 0.0078125 : 0; // 1/128
+	retorno += rx[1] & 64  ? 0.00390625 : 0; // 1/256
+	retorno += rx[1] & 32  ? 0.001953125 : 0; // 1/512
+	retorno += rx[1] & 16  ? 0.0009765625 : 0; // 1/1024
+	retorno += rx[1] & 8   ? 0.00048828125 : 0; // 1/2048
+	retorno += rx[1] & 4   ? 0.000244140625 : 0; // 1/4096
+	retorno += rx[1] & 2   ? 0.0001220703125 : 0; // 1/8192
+	retorno += rx[1] & 1   ? 0.00006103515625 : 0; // 1/16384
+
+	retorno += rx[2] & 128 ? 0.00003051757813 : 0; // 1/32768
+	retorno += rx[2] & 64  ? 0.00001525878906 : 0; // 1/65536
+	retorno += rx[2] & 32  ? 0.000007629394531 : 0; // 1/131072
+	retorno += rx[2] & 16  ? 0.000003814697266 : 0; // 1/262144
+	retorno += rx[2] & 8   ? 0.000001907348633 : 0; // 1/524288
+	retorno += rx[2] & 4   ? 0.0000009536743164 : 0; // 1/1048576
+	retorno += rx[2] & 2   ? 0.0000004768371582 : 0; // 1/2097152
+	retorno += rx[2] & 1   ? 0.0000002384185791 : 0; // 1/4194304
+
+	retorno = rx[0] & 128 ? (-1) * retorno : retorno; // Verifica o sinal
+
+	return retorno;
+}
+
 
 float CalculaS23(uint8_t *rx){
 
