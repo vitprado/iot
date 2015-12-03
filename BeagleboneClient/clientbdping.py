@@ -23,7 +23,7 @@ OUTFILE = 'logdata.txt'
 
 host = '192.168.1.105'
 tipo = 1 # Beaglebone Wifi
-codigo = 9
+codigo = 0
 
 #host = 'beaglebone'
 #tipo = 2 # Beaglebone cabo
