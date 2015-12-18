@@ -38,13 +38,26 @@ Caso haja conflito nas credenciais SSH, utilizar o comando abaixo:
 ssh-keygen -R 192.168.7.2
 ```
 
-Em seguida estabelecer conexão com a Beaglebone conectava via USB (por padrão com IP 192.168.7.2, usuário root e sem senha)
-```sh
-ssh root@192.168.7.2
-```
-
 No terminal da Beaglebone, executar
 ```sh
 /sbin/route add default gw 192.168.7.1
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 ```
+
+
+### 3- [DICA] Instalar o Git na Beaglebone
+
+Uma dica para facilitar a transmissão de arquivos para a Beaglebone é instalar o git no microcontrolador e fazer o push do projeto.
+
+
+
+
+
+
+
+
+
+
+
+
+
