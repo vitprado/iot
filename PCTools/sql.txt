@@ -1,5 +1,9 @@
--- DROP DATABASE iot;
+-- QUERY'S DE CRIAÇÃO DO BANCO E DAS TABELAS.
+-- NO GATEWAY DEVEM SER CRIADOS O BANCO E AS DUAS TABELAS (MEDICAO E RESULTADOS)
+-- NA BEAGLEBONE DEVEM SER CRIADOS O BANCO E A TABELA MEDICAO
 
+
+-- DROP DATABASE iot;
 CREATE DATABASE iot
   WITH OWNER = postgres
        ENCODING = 'UTF8'
@@ -8,6 +12,7 @@ CREATE DATABASE iot
        LC_CTYPE = 'en_US.UTF-8'
        CONNECTION LIMIT = -1;
        
+-- Query que cria a tabela 'medicao', onde serão gravados os valores obtidos dos sensores.
 DROP TABLE IF EXISTS medicao;
 DROP SEQUENCE medicao_ID_medicao_seq;
 CREATE SEQUENCE medicao_ID_medicao_seq;
@@ -26,15 +31,12 @@ CREATE TABLE medicao
 
 COMMENT ON COLUMN "resultados"."tipo" IS '1- Beaglebone wifi, 2- Beaglebone cabo, 3- OpenWSN';
 
-"INSERT INTO medicao VALUES (DEFAULT, '{}', '{}', {}, {}, {});".format(tipo, timestamp, a, b, c)
-
-SELECT m.sensor0, m.sensor1, m.sensor2, m.sensor3, m.sensor4, m.sensor5 from medicao as m order by m.id_medicao DESC limit 1;
 
 
+-- Query SQL que cria uma tabela "RESULTADOS". Nesta tabela serão armazenados os valores
+-- dos tempos fim-a-fim (ping ou tempo de resposta do microcontrolador)
 
 -- BANCO DE DADOS LOCAL (iot.resultados)
-
-
 DROP TABLE IF EXISTS resultados;
 DROP SEQUENCE resultados_ID_resultado_seq;
 
@@ -49,6 +51,13 @@ CREATE TABLE resultados
 
 COMMENT ON COLUMN "resultados"."tipo" IS '1- Beaglebone wifi, 2- Beaglebone cabo, 3- OpenWSN';
 
+
+
+-- QUERY'S DE CONSULTA
+
+
+-- QUERY que exibe a quantidade de medições (agrupados por 'tipo'), e calcula valor mínimo, máximo,
+-- media, variancia e desvio padrão daquele grupo.
 -- Estatisticas
 select 
     count(*) as medicoes, 
@@ -63,6 +72,15 @@ where r.tempo > 0
 group by
 	r.tipo
 ;
+
+
+-- Exemplo de QUERY para inserir valores de medição (na tabela 'medicao') no banco de dados.
+"INSERT INTO medicao VALUES (DEFAULT, '{}', '{}', {}, {}, {});".format(tipo, timestamp, a, b, c)
+
+-- Exemplo de QUERY para obter os valores da última medição registrada no banco.
+-- "order by m.id_medicao DESC" ordena os resultados por ID de forma decrescente, e "limit 1" para exibir apenas 1 resultado. 
+SELECT m.sensor0, m.sensor1, m.sensor2, m.sensor3, m.sensor4, m.sensor5 from medicao as m order by m.id_medicao DESC limit 1;
+
 
 --
 -- Estatisticas 2

@@ -1,5 +1,40 @@
 Instruções:
 
+--------------------------------------------------------------------------
+OBSERVAÇÃO:
+
+Primeiramente é necessário instalar o PostgreSQL na Beaglebone.
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+OBSERVAÇÃO:
+
+A porta SPI deve ser ativada na Beaglebone, para isso, no terminal da
+Beaglebone o usuário deve estar na pasta  "iot/BeagleboneMote/scripts/"
+e executar o script "AtivarSPI.sh".
+
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+OBSERVAÇÃO 3:
+
+O clientbdping.py deve ser executado no gateway em conjunto com 
+o servidorping.py na Beaglebone.
+
+O clientbdvalores.py deve ser executado no gateway em conjunto com 
+o servidorbdvalores.py na Beaglebone.
+
+--------------------------------------------------------------------------
+
+
+# EXEMPLO DE UTILIZAÇÃO
+./compila.sh
+./postgresql 
+python servidorping.py 5000
+
+
 # APLICAÇÃO C PARA COMUNICAÇÃO SPI
 Arquivos: compila.sh e postgresql.c
 

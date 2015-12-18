@@ -1,0 +1,21 @@
+INSTRUÇÕES
+
+# sql.txt: Contém os comandos para serem executados no banco de dados,
+comandos de criação do banco, das tabelas, e comandos de consulta.
+Foi utilizado o "banco de dados" PostgreSQL na Beaglebone e no computador
+cliente.
+
+# beagle.sh: Um script para conexão com a Beaglebone, quando conectada via
+USB, que previne alguns erros de conexão (limpa os certificados SSH), e
+habilita o compartilhamento de internet do Linux via USB. Para se conectar
+à Beaglebone basta conectala via USB e executar o comando "./beagle.sh" no
+terminal do linux. Para habilitar o acesso da internet via USB ainda é
+necessário executar NO TERMINAL DA BEAGLEBONE, os seguintes comandos:
+"/sbin/route add default gw 192.168.7.1"
+"echo "nameserver 8.8.8.8" >> /etc/resolv.conf"
+Estes comandos estão disponíveis também em "iot/BeagleboneMote/scripts/" no
+script "InternetUSB.sh". 
+
+
+# plotPython.py: Programa em Python que foi utilizado para plotar graficos
+das curvas gaussianas dos resultados de medição de tempo fim-a-fim.

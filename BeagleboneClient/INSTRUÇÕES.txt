@@ -1,0 +1,38 @@
+INSTRUÇÕES
+
+--------------------------------------------------------------------------
+OBSERVAÇÃO:
+
+O clientbdping.py deve ser executado no gateway em conjunto com 
+o servidorping.py na Beaglebone.
+
+O clientbdvalores.py deve ser executado no gateway em conjunto com 
+o servidorbdvalores.py na Beaglebone.
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+OBSERVAÇÃO 2:
+
+Nos programas clientbdping.py e clientbdvalores.py, o IP do microcontrolador
+e a porta de conexão devem ser alterados de acordo a execução. Se na
+Beaglebone o servidorping.py foi setado com a porta 5000, deve-se configurar
+NO CODIGO do programa clientbdping.py a porta 5000 e o IP da Beaglebone na
+rede.
+
+--------------------------------------------------------------------------
+
+# EXEMPLO DE UTILIZAÇÃO
+python clientbdping.py
+ou
+python clientbdvalores.py
+
+# clientbdping.py: Este programa se conecta ao servidor (microcontrolador),
+e inicia um loop de consultas. O programa inicia um contador de tempo, 
+envia a requisição para o microcontrolador, obtem a resposta e pausa o contador
+de tempo. A resposta é descartada e o tempo registrado no contador é salvo
+no banco de dados. O loop se repete até que o programa seja encerrado.
+
+# clientbdvalores.py: Este programa envia está setado para fazer uma requisição
+ao microcontrolador a cada 3 segundos. A resposta (valores medidos) é salva no 
+banco de dados.

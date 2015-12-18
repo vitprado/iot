@@ -1,0 +1,20 @@
+INSTRUÇÕES
+
+Comunicação entre Gateway e mote OpenWSN.
+Arquivos CoAP que devem ser executados no gateway, dentro da pasta CoAP do OpenWSN.
+
+# EXEMPLO DE UTILIZAÇÃO
+Conectar o sink OpenWSN ao gateway
+Ligar o mote e conecta-lo ao sensor
+Executar a versão do cliente Python CoAP de acordo com a necessidade.
+
+# sensor_data_scanner.py: Programa original do professor Marcelo Barros.
+
+# sensor_data_scannersqlping.py: Adaptação que registra o tempo decorrido
+entre enviar uma requisição e obter a resposta do mote.
+
+# sensor_data_scannersqlvalores.py: Adaptação que recebe os valores de leitura do
+mote e salva no bando de dados.
+
+# sensor_data_scannertxt.py: Adaptação que recebe os valores de leitura do
+mote e salva em um arquivo TXT
