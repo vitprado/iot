@@ -3,10 +3,19 @@
 #
 # Author: Vitor Hugo Prado Cardoso (10/11/2015)
 #
+# Servidor Socket que deve ser executado na Beaglebone.
+# O programa deve ser iniciado enviando a porta de conexao socket
+# como parametro. Ex. linux: "python servidorvalores 5000" para usar
+# a porta 5000. 
 #
-# Servidor Socket para receber dados via ethernet e registrar
-# os dados em arquivo txt.
+# Ao receber uma mensagem de requisicao (string "leitura") o
+# programa inicia a funcao "CapturaMedicao()" que envia uma query 
+# SQL para o banco de dados que retorna a leitura mais recente registrada
+# no banco de dados.
+# 
+# Em seguida o programa envia a leitura como resposta ao client
 #
+
 
 import sys
 import socket
@@ -57,19 +66,19 @@ while True:
     #timestamp = time.strftime("[%H:%M:%S]")
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
-    # Finaliza servidor socket
+    # Verifica se a mensagem recebida eh um comando para encerrar conexao.
     if (read == 'close'):
         print 'Comando \'close\' recebido. Finalizando o programa.'
         client.close()
         s.close()
         break
 
-    # Verifica mensagem recebida
+    # Verifica se a mensagem recebida eh uma requisicao de leitura dos sensores
     if (read == 'leitura'):
         
         data = CapturaMedicao()
 
-        # Formata a mensagem para salvar no arquivo de texto
+        # Formata a mensagem com o formato de query SQL
         query = "INSERT INTO medicao VALUES (DEFAULT, '{}', '{}', {}, {}, {});".format(tipo, timestamp, *data[0])
         #leitura_data =  '{} - {}, {}, {}, {}, {}, {}'.format(timestamp, *data[0])
         

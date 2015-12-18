@@ -1,0 +1,36 @@
+Instruções:
+
+# APLICAÇÃO C PARA COMUNICAÇÃO SPI
+Arquivos: compila.sh e postgresql.c
+
+O script compila.sh se resume ao comando linux:
+"gcc -std=c99 postgresql.c -lm -lpq -o postgresql"
+Ele é executado para compilar o programa postgresql.c. Este programa
+faz a leitura periodica dos sensores da SONOMA via SPI, e registra os
+valores no banco de dados.
+
+
+# SERVIDOR ETHERNET PYTHON EXECUTADO NA BEAGLEBONE
+Arquivos: servidorping.py e servidorbdvalores.py
+
+O arquivo servidorping.py deve ser inciado enviando como argumento
+a porta que será usada para estabelecer a conexão ethernet.
+
+Ex.: python servidorping.py 5000
+
+Neste caso o client (gateway) deve ser configurado para se conectar 
+ao IP do microcontrolador pela porta 5000 (ex.: 192.168.1.105:5000).
+
+Os programas servidorping.py e servidorbdvalores.py são muito parecidos,
+ambos esperam uma string "leitura" para consultar o valor mais recente
+registrado no banco de dados e enviam esta informação como resposta ao
+client. A diferença entre eles é a forma como a resposta é estruturada:
+
+servidorping.py - resposta: "0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000"
+
+servidorbdvalores.py: resposta: "INSERT INTO medicao VALUES (DEFAULT, '1', '[timestamp]', 0.0000, 0.0000, 0.0000);"
+
+O servidorbdvalores.py envia a resposta com format de query SQL, o
+cliente precisa apenas executar essa query no banco para registrar
+os valores.
+
